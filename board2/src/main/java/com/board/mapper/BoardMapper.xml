@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.board.mapper.BoardMapper">
+	
+	<select id="getLists" resultType="com.board.entity.Board">
+		select * from myboard order by idx desc
+	</select>
+
+	<insert id="boardInsert" parameterType="com.board.entity.Board">
+		<selectKey keyProperty="idx" resultType="int" order="BEFORE">
+		    	SELECT myboard_idx.nextval FROM DUAL
+		</selectKey>
+		insert into myboard(idx,title, content, writer) 
+		values(#{idx},#{title},#{content},#{writer})
+	</insert>
+	
+	<!-- parameterType 타입이 하나면 생략가능 -->
+	<select id="boardContent" resultType="com.board.entity.Board">
+		select * from myboard where idx=#{idx}
+	</select>
+	
+	<delete id="boardDelete">
+		delete from myboard where idx=#{idx}
+	</delete>
+	
+	<update id="boardUpdate" parameterType="com.board.entity.Board">
+		update myboard set title=#{title}, content=#{content}
+		where idx=#{idx}
+	</update>
+	
+	<update id="boardCount">
+		update myboard set count=count+1 where idx=#{idx}
+	</update>
+</mapper>
