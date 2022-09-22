@@ -10,8 +10,8 @@
 		<selectKey keyProperty="idx" resultType="int" order="BEFORE">
 		    	SELECT myboard_idx.nextval FROM DUAL
 		</selectKey>
-		insert into myboard(idx,title, content, writer) 
-		values(#{idx},#{title},#{content},#{writer})
+		insert into myboard(idx,memID,title, content, writer) 
+		values(#{idx},#{memID},#{title},#{content},#{writer})
 	</insert>
 	
 	<!-- parameterType 타입이 하나면 생략가능 -->

@@ -1,5 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=EUC-KR"
-    pageEncoding="EUC-KR"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 <!DOCTYPE html>
@@ -25,12 +25,12 @@
    	   type : "get",
    	   data : { "memID" : memID},
    	   success : function(result){
-   		   // Áßº¹À¯¹« Ãâ·Â(result=1 : »ç¿ëÇÒ¼öÀÖ´Â ¾ÆÀÌµğ, 0 : »ç¿ëÇÒ¼ö¾ø´Â ¾ÆÀÌµğ)
+   		   // ì¤‘ë³µìœ ë¬´ ì¶œë ¥(result=1 : ì‚¬ìš©í• ìˆ˜ìˆëŠ” ì•„ì´ë””, 0 : ì‚¬ìš©í• ìˆ˜ì—†ëŠ” ì•„ì´ë””)
    		 	if(result==1) {
-   		 		$("#checkMessage").html("»ç¿ëÇÒ ¼ö ÀÖ´Â ¾ÆÀÌµğÀÔ´Ï´Ù.");
+   		 		$("#checkMessage").html("ì‚¬ìš©í•  ìˆ˜ ìˆëŠ” ì•„ì´ë””ì…ë‹ˆë‹¤.");
    		 		$("#checkType").attr("class","modal-content panel-success");
    		 	} else {
-   		 		$("#checkMessage").html("»ç¿ëÇÒ ¼ö ¾ø´Â ¾ÆÀÌµğÀÔ´Ï´Ù.");
+   		 		$("#checkMessage").html("ì‚¬ìš©í•  ìˆ˜ ì—†ëŠ” ì•„ì´ë””ì…ë‹ˆë‹¤.");
    		 		$("#checkType").attr("class","modal-content panel-warning");
    		 	}
    		    $("#myModal").modal("show");
@@ -42,7 +42,7 @@
 	  var memPwd1=$("#memPwd1").val();
 	  var memPwd2=$("#memPwd2").val();
 	  if(memPwd1 != memPwd2) {
-		  $("#passMessage").html("ºñ¹Ğ¹øÈ£°¡ ¼­·Î ÀÏÄ¡ÇÏÁö ¾Ê½À´Ï´Ù.");
+		  $("#passMessage").html("ë¹„ë°€ë²ˆí˜¸ê°€ ì„œë¡œ ì¼ì¹˜í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤.");
 	  } else {
 		  $("#passMessage").html("");
 		  $("#memPassword").val(memPwd1);
@@ -51,7 +51,7 @@
   function goInsert() {
 	  var memAge=$("#memAge").val();
 	  if(memAge==null || memAge=="" || memAge==0) {
-		  alert("³ªÀÌ¸¦ ÀÔ·ÂÇÏ¼¼¿ä");
+		  alert("ë‚˜ì´ë¥¼ ì…ë ¥í•˜ì„¸ìš”");
 		  return false;
 	  }
 	  document.frm.submit();
@@ -63,67 +63,68 @@
 <div class="container">
   <h2>SPRING TEST</h2>
   <div class="panel panel-default">
-    <div class="panel-heading">È¸¿ø°¡ÀÔ</div>
+    <div class="panel-heading">íšŒì›ê°€ì…</div>
     <div class="panel-body">
     	<form name="frm" action="${contextPath}/memRegister.do" method="post">
     		<input type="hidden" id="memPassword" name="memPassword" value=""/>
 		    <table class="table table-bordered" style="text-align: center; border :1px solid black;">
 		    	<tr>
-		    		<td style="width:15%; vertical-align:middle;">¾ÆÀÌµğ</td>
-		    		<td><input type="text" id="memID" name="memID" class="form-control" placeholder="¾ÆÀÌµğ¸¦ ÀÔ·ÂÇØÁÖ¼¼¿ä." maxlength="20"/></td>
-		    		<td><button class="btn btn-primary btn-sm" type="button" onclick="registerCheck()">Áßº¹È®ÀÎ</button></td>
+		    		<td style="width:15%; vertical-align:middle;">ì•„ì´ë””</td>
+		    		<td><input type="text" id="memID" name="memID" class="form-control" placeholder="ì•„ì´ë””ë¥¼ ì…ë ¥í•´ì£¼ì„¸ìš”." maxlength="20"/></td>
+		    		<td><button class="btn btn-primary btn-sm" type="button" onclick="registerCheck()">ì¤‘ë³µí™•ì¸</button></td>
 		    	</tr>
 		    	<tr>
-		    		<td style="width:15%; vertical-align:middle;">ºñ¹Ğ¹øÈ£</td>
-		    		<td colspan="2"><input type="password" id="memPwd1" name="memPwd1" class="form-control" onkeyup="passwordCheck()" placeholder="ºñ¹Ğ¹øÈ£¸¦ ÀÔ·ÂÇØÁÖ¼¼¿ä." maxlength="20"/></td>
+		    		<td style="width:15%; vertical-align:middle;">ë¹„ë°€ë²ˆí˜¸</td>
+		    		<td colspan="2"><input type="password" id="memPwd1" name="memPwd1" class="form-control" onkeyup="passwordCheck()" placeholder="ë¹„ë°€ë²ˆí˜¸ë¥¼ ì…ë ¥í•´ì£¼ì„¸ìš”." maxlength="20"/></td>
 		    	</tr>
 		    	<tr>
-		    		<td style="width:15%; vertical-align:middle;">ºñ¹Ğ¹øÈ£È®ÀÎ</td>
-		    		<td colspan="2"><input type="password" id="memPwd2" name="memPwd2" class="form-control" onkeyup="passwordCheck()" placeholder="ºñ¹Ğ¹øÈ£¸¦ ÀÔ·ÂÇØÁÖ¼¼¿ä." maxlength="20"/></td>
+		    		<td style="width:15%; vertical-align:middle;">ë¹„ë°€ë²ˆí˜¸í™•ì¸</td>
+		    		<td colspan="2"><input type="password" id="memPwd2" name="memPwd2" class="form-control" onkeyup="passwordCheck()" placeholder="ë¹„ë°€ë²ˆí˜¸ë¥¼ ì…ë ¥í•´ì£¼ì„¸ìš”." maxlength="20"/></td>
 		    	</tr>
 		    	<tr>
-		    		<td style="width:15%; vertical-align:middle;">ÀÌ¸§</td>
-		    		<td colspan="2"><input type="text" id="memName" name="memName" class="form-control" placeholder="ÀÌ¸§À» ÀÔ·ÂÇØÁÖ¼¼¿ä." maxlength="20"/></td>
+		    		<td style="width:15%; vertical-align:middle;">ì´ë¦„</td>
+		    		<td colspan="2"><input type="text" id="memName" name="memName" class="form-control" placeholder="ì´ë¦„ì„ ì…ë ¥í•´ì£¼ì„¸ìš”." maxlength="20"/></td>
 		    	</tr>
 		    	<tr>
-		    		<td style="width:15%; vertical-align:middle;">³ªÀÌ</td>
-		    		<td colspan="2"><input type="text" id="memAge" name="memAge" class="form-control" placeholder="³ªÀÌ¸¦ ÀÔ·ÂÇØÁÖ¼¼¿ä." maxlength="20" value="0"/></td>
+		    		<td style="width:15%; vertical-align:middle;">ë‚˜ì´</td>
+		    		<td colspan="2"><input type="text" id="memAge" name="memAge" class="form-control" placeholder="ë‚˜ì´ë¥¼ ì…ë ¥í•´ì£¼ì„¸ìš”." maxlength="20" value="0"/></td>
 		    	</tr>
 		    	<tr>
-		    		<td style="width:15%; vertical-align:middle;">¼ºº°</td>
+		    		<td style="width:15%; vertical-align:middle;">ì„±ë³„</td>
 		    		<td colspan="2">
 		    			<div class="form-group" style="text-align:center; marghin:0 outo;">
 		    				<div class="btn-group" data-toggle="buttons">
 		    					<label>
-		    						<input type="radio" id="memGender" name="memGender" autocomplete="off" value="³²ÀÚ">³²ÀÚ</input>
+		    						<input type="radio" id="memGender" name="memGender" autocomplete="off" value="ë‚¨ì">ë‚¨ì</input>
 		    					</label>
 		    					<label>
-		    						<input type="radio" id="memGender" name="memGender" autocomplete="off" value="¿©ÀÚ"/>¿©ÀÚ</input>
+		    						<input type="radio" id="memGender" name="memGender" autocomplete="off" value="ì—¬ì"/>ì—¬ì</input>
 		    					</label>
 		    				</div>
 		    			</div>
 		    		</td>
 		    	</tr>
 		    	<tr>
-		    		<td style="width:15%; vertical-align:middle;">ÀÌ¸ŞÀÏ</td>
-		    		<td colspan="2"><input type="text" id="memEmail" name="memEmail" class="form-control" placeholder="ÀÌ¸ŞÀÏÀ» ÀÔ·ÂÇØÁÖ¼¼¿ä." maxlength="20"/></td>
+		    		<td style="width:15%; vertical-align:middle;">ì´ë©”ì¼</td>
+		    		<td colspan="2"><input type="text" id="memEmail" name="memEmail" class="form-control" placeholder="ì´ë©”ì¼ì„ ì…ë ¥í•´ì£¼ì„¸ìš”." maxlength="20"/></td>
 		    	</tr>
 		    	<tr>
 		    		<td colspan="3" style="text-align: left;">
-                		<span id="passMessage" style="color: red"></span><input type="button" class="btn btn-primary btn-sm pull-right" value="µî·Ï" onclick="goInsert()"/>
+                		<span id="passMessage" style="color: red"></span><input type="button" class="btn btn-primary btn-sm pull-right" value="ë“±ë¡" onclick="goInsert()"/>
              		</td>
 		    	</tr>
 		    </table>
+		    <input type="hidden" name="${_csrf.parameterName }" value="${_csrf.token }"/>
     	</form>
     </div>
-    <!-- ¾ÆÀÌµğÁßº¹ È®ÀÎ ¸ğ´Ş  -->
+    <!-- ì•„ì´ë””ì¤‘ë³µ í™•ì¸ ëª¨ë‹¬  -->
     <div id="myModal" class="modal fade" role="dialog">
   <div class="modal-dialog">
     <!-- Modal content-->
     <div id="checkType" class="modal-content panel-info">
       <div class="modal-header panel-heading">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">¾ÆÀÌµğ Áßº¹È®ÀÎ</h4>
+        <h4 class="modal-title">ì•„ì´ë”” ì¤‘ë³µí™•ì¸</h4>
       </div>
       <div class="modal-body">
         <p id="checkMessage"></p>
@@ -135,7 +136,7 @@
   </div>
 </div>
 
-<!-- È¸¿ø°¡ÀÔ ¸ğ´Ş -->
+<!-- íšŒì›ê°€ì… ëª¨ë‹¬ -->
 <div id="myMessage" class="modal fade" role="dialog">
   <div class="modal-dialog">
     <!-- Modal content-->

@@ -1,5 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=EUC-KR"
-    pageEncoding="EUC-KR"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 <!DOCTYPE html>
@@ -25,26 +25,26 @@
  <jsp:include page="../common/header.jsp"/>
   <h2>SPRING MVC03</h2>
   <div class="panel panel-default">
-    <div class="panel-heading">È¸¿ø»çÁøµî·Ï</div>
+    <div class="panel-heading">íšŒì›ì‚¬ì§„ë“±ë¡</div>
     <div class="panel-body">
-    	<form action="${contextPath}/memImageUpdate.do" method="post" enctype="multipart/form-data"> <!-- enctype/multipart/form-data ÆÄÀÏÀÌ¹ÌÁö ¾÷·Îµå½Ã »ç¿ë -->
+    	<form action="${contextPath}/memImageUpdate.do?${_csrf.parameterName}=${_csrf.token}" method="post" enctype="multipart/form-data"> <!-- enctype/multipart/form-data íŒŒì¼ì´ë¯¸ì§€ ì—…ë¡œë“œì‹œ ì‚¬ìš© -->
     		<input type="hidden" name="memID" value="${mvo.memID }"/>
-		    <table class="table table-bordered" style="text-align: center; border :1px solid black;">
+		    <table class="table table-bordered" style="text-align: center; border : 1px solid black;">
 		    	<tr>
-		    		<td style="width:15%; vertical-align:middle;">¾ÆÀÌµð</td>
+		    		<td style="width:15%; vertical-align:middle;">ì•„ì´ë””</td>
 		    		<td>${mvo.memID }</td>
 		    	</tr>
 		    	<tr>
-		    		<td style="width:15%; vertical-align:middle;">»çÁø¾÷·Îµå</td>
+		    		<td style="width:15%; vertical-align:middle;">ì‚¬ì§„ì—…ë¡œë“œ</td>
 		    		<td colspan="2">
 		    			<span class="btn btn-default">
-		    				ÀÌ¹ÌÁö¸¦ ¾÷·ÎµåÇÏ¼¼¿ä.<input type="file" name="memProfile"/>
+		    				ì´ë¯¸ì§€ë¥¼ ì—…ë¡œë“œí•˜ì„¸ìš”.<input type="file" name="memProfile"/>
 		    			</span>
 		    		</td>
 		    	</tr>
 		    	<tr>
 		    		<td colspan="3" style="text-align: left;">
-                		<input type="submit" class="btn btn-primary btn-sm pull-right" value="µî·Ï"/>
+                		<input type="submit" class="btn btn-primary btn-sm pull-right" value="ë“±ë¡"/>
              		</td>
 		    	</tr>
 		    </table>

@@ -1,5 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=EUC-KR"
-    pageEncoding="EUC-KR"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
@@ -11,7 +11,6 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-  
   <script>
 	  $(document).ready(function() {
 		  if(${!empty msgType}) {
@@ -24,45 +23,33 @@
 <body>
 <jsp:include page="common/header.jsp"/>
 	<div class="container">
-	<c:if test="${empty mvo}">
-	  <h3>Spring Test</h3>
-	</c:if>
-	<c:if test="${!empty mvo }">
-		<c:if test="${mvo.memProfile eq null}">
-	  		<img src="./${contextPath}/resources/images/a.jpg" style="width:50px; height:50px"/>
-	    </c:if>
-	    <c:if test="${mvo.memProfile ne null}">
-	  		<img src="./${contextPath}/resources/images/person.jpg" style="width:50px; height:50px"/>
-	  	</c:if>
-		<label>${mvo.memName}´Ô ¹æ¹®À» È¯¿µÇÕ´Ï´Ù.</label>
-	</c:if>
-	<div class="panel panel-default">
-		<div>
-			<img src="./${contextPath }/resources/images/a.jpg" style="width:100%; height:400px;"/>
-		</div>
-		<div class="panel-body">
-			<ul class="nav nav-tabs">
-			  <li class="active"><a data-toggle="tab" href="#home">Home</a></li>
-			  <li><a data-toggle="tab" href="#menu1">°Ô½ÃÆÇ</a></li>
-			  <li><a data-toggle="tab" href="#menu2">°øÁö»çÇ×</a></li>
-			</ul>
-			
-			<div class="tab-content">
-			  <div id="home" class="tab-pane fade in active">
-			    <h3>HOME</h3>
-			    <p>Some content.</p>
-			  </div>
-			  <div id="menu1" class="tab-pane fade">
-			    <h3>°Ô½ÃÆÇ</h3>
-			    <p>Some content in menu 1.</p>
-			  </div>
-			  <div id="menu2" class="tab-pane fade">
-			    <h3>°øÁö»çÇ×</h3>
-			    <p>Some content in menu 2.</p>
-			  </div>
+		<div class="panel panel-default">
+			<div>
+				<img src="./${contextPath }/resources/images/a.jpg" style="width:100%; height:400px;"/>
+			</div>
+			<div class="panel-body">
+				<ul class="nav nav-tabs">
+				  <li class="active"><a data-toggle="tab" href="#home">Home</a></li>
+				  <li><a data-toggle="tab" href="#menu1">ê²Œì‹œíŒ</a></li>
+				  <li><a data-toggle="tab" href="#menu2">ê³µì§€ì‚¬í•­</a></li>
+				</ul>
+				
+				<div class="tab-content">
+				  <div id="home" class="tab-pane fade in active">
+				    <h3>HOME</h3>
+				    <p>Some content.</p>
+				  </div>
+				  <div id="menu1" class="tab-pane fade">
+				    <h3>ê²Œì‹œíŒ</h3>
+				    <p>Some content in menu 1.</p>
+				  </div>
+				  <div id="menu2" class="tab-pane fade">
+				    <h3>ê³µì§€ì‚¬í•­</h3>
+				    <p>Some content in menu 2.</p>
+				  </div>
+				</div>
 			</div>
 		</div>
-	</div>
 	</div>
 	
 	<div id="myMessage" class="modal fade" role="dialog">
