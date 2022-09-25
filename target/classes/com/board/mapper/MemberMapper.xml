@@ -1,16 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.board.mapper.MemberMapper">
+
+	<resultMap type="com.board.entity.Member" id="memberMap">
+		<id property="idx" column="memidx"/>
+		<result property="memID" column="memID"/>
+		<result property="memPassword" column="memPassword"/>
+		<result property="memName" column="memName"/>
+		<result property="memAge" column="memAge"/>
+		<result property="memGender" column="memGender"/>
+		<result property="memEmail" column="memEmail"/>
+		<result property="memProfile" column="memProfile"/>
+		<collection property="authList" resultMap="authMap">
+		</collection>
+	</resultMap>
 	
-	<select id="registerCheck" resultType="com.board.entity.Member">
-		select * from mem_tbl where memID=#{memID}
+	<resultMap type="com.board.entity.AuthVO" id="authMap">
+		<id property="no" column="no"/>
+		<result property="memID" column="memID"/>
+		<result property="auth" column="auth"/>
+	</resultMap>
+	
+	<select id="registerCheck" resultMap="memberMap">
+		select * from mem_stbl where memID=#{memID}
 	</select>
 	
 	<insert id="register" parameterType="com.board.entity.Member">
-		<selectKey keyProperty="idx" resultType="int" order="BEFORE">
-		    	SELECT mem_seq.nextval FROM DUAL
-		</selectKey>
-		insert into mem_tbl(memIdx,memID,memPassword,memName,memAge,memGender,memEmail,memProfile)
+	<selectKey keyProperty="idx" resultType="int" order="BEFORE">
+		    	SELECT stbl_seq.nextval FROM DUAL
+	</selectKey>
+		insert into mem_stbl(memIdx,memID,memPassword,memName,memAge,memGender,memEmail,memProfile)
 		values(#{idx},#{memID},#{memPassword},#{memName},#{memAge},#{memGender},#{memEmail},#{memProfile})
 	</insert>
 	
@@ -24,11 +43,20 @@
 							where memID=#{memID}
 	</update>
 	
-	<select id="getMember" resultType="com.board.entity.Member">
-		select * from mem_tbl where memID=#{memID}
+	<!-- 수정(회원,권한)-->
+	<select id="getMember" resultMap="memberMap">
+		select * from mem_stbl mem LEFT OUTER JOIN mem_auth auth on
+		mem.memID=auth.memID where mem.memID=#{memID}
 	</select>
 	
 	<update id="memProfileUpdate" parameterType="com.board.entity.Member">
 		update mem_tbl set memProfile=#{memProfile} where memID=#{memID}
 	</update>
+	
+	<insert id="authInsert" parameterType="com.board.entity.AuthVO">
+	<selectKey keyProperty="no" resultType="int" order="BEFORE">
+		    	SELECT auth_seq.nextval FROM DUAL
+	</selectKey>
+		insert into mem_auth(no,memID,auth) values(#{no},#{memID},#{auth})
+	</insert>
 </mapper>

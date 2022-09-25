@@ -2,11 +2,13 @@ package com.board.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.board.entity.AuthVO;
 import com.board.entity.Member;
 import com.board.mapper.MemberMapper;
 import com.oreilly.servlet.MultipartRequest;
@@ -25,6 +28,9 @@ public class MemberController {
 	
 	@Autowired
 	MemberMapper memberMapper;
+	
+	@Autowired
+	PasswordEncoder pWEncoder;
 	
 	@RequestMapping("/memJoin.do")
 	public String memJoin() {
@@ -47,7 +53,7 @@ public class MemberController {
 				memPwd1==null || memPwd1.equals("") ||
 				memPwd2==null || memPwd2.equals("") ||
 				m.getMemName()==null || m.getMemName().equals("") ||
-				m.getMemAge()==0 ||
+				m.getMemAge()==0 || m.getAuthList().size() ==0 ||
 				m.getMemGender()==null || m.getMemGender().equals("") ||
 				m.getMemEmail()==null || m.getMemEmail().equals("")) {
 			attr.addFlashAttribute("msgType","누락 메세지");
@@ -61,12 +67,29 @@ public class MemberController {
 		}
 		m.setMemProfile(""); // 사진이미지는 없으므로 ""
 		//회원을 테이블에 저장하기
+		//추가 : 비밀번호를 암호화하ㅣ(API)
+		String encyptPw=pWEncoder.encode(m.getMemPassword());
+		m.setMemPassword(encyptPw);
+		// register() 수정
 		int result=memberMapper.register(m);
-		if(result==1) {
+		if(result==1) {//회원가입성공메세지
+			//추가 : 권한테이블에 회원의 권한을 저장하기
+			List<AuthVO> list =m.getAuthList();
+			for(AuthVO authVO : list) {
+				if(authVO.getAuth()!=null) {
+					AuthVO saveVo =new AuthVO();
+					saveVo.setMemID(m.getMemID());
+					saveVo.setAuth(authVO.getAuth());
+					memberMapper.authInsert(saveVo);
+				}
+			}
 			attr.addFlashAttribute("msgType","성공 메세지");
 			attr.addFlashAttribute("msg","회원가입 성공");
 			// 회원가입이 성공하면 자동로그인되게 하기 - 세션 줘서
-			session.setAttribute("mvo", m);
+			// getMember() -> 회원정보+권한정보가 있어야하기 떄문에 수정해줘야함
+			Member mvo=memberMapper.getMember(m.getMemID());
+			System.out.println(mvo);
+			session.setAttribute("mvo", mvo);
 			return "redirect:/";
 		} else {
 			attr.addFlashAttribute("msgType","실패 메세지");

@@ -25,7 +25,7 @@
 	<div class="container">
 		<div class="panel panel-default">
 			<div>
-				<img src="./${contextPath }/resources/images/a.jpg" style="width:100%; height:400px;"/>
+				<img src="../${contextPath}/resources/images/a.jpg" style="width:100%; height:400px;"/>
 			</div>
 			<div class="panel-body">
 				<ul class="nav nav-tabs">
@@ -33,7 +33,6 @@
 				  <li><a data-toggle="tab" href="#menu1">게시판</a></li>
 				  <li><a data-toggle="tab" href="#menu2">공지사항</a></li>
 				</ul>
-				
 				<div class="tab-content">
 				  <div id="home" class="tab-pane fade in active">
 				    <h3>HOME</h3>
@@ -51,7 +50,6 @@
 			</div>
 		</div>
 	</div>
-	
 	<div id="myMessage" class="modal fade" role="dialog">
   <div class="modal-dialog">
     <!-- Modal content-->
@@ -67,9 +65,7 @@
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
       </div>
     </div>
-
   </div>
 </div>
-
 </body>
 </html>

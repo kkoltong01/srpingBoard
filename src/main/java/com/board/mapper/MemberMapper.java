@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Update;
 
+import com.board.entity.AuthVO;
 import com.board.entity.Member;
 
 
@@ -16,4 +17,5 @@ public interface MemberMapper {
 	public int memUpdate(Member mvo); //수정하기
 	public Member getMember(String memID);
 	public void memProfileUpdate(Member mvo);
+	public void authInsert(AuthVO saveVo);
 }

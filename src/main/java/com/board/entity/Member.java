@@ -1,5 +1,7 @@
 package com.board.entity;
 
+import java.util.List;
+
 import lombok.Data;
 
 @Data
@@ -12,4 +14,5 @@ public class Member {
 	private String memGender;
 	private String memEmail;
 	private String memProfile;
+	private List<AuthVO> authList;
 }
