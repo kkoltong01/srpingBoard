@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -25,7 +26,7 @@
 	<div class="container">
 		<div class="panel panel-default">
 			<div>
-				<img src="../${contextPath}/resources/images/a.jpg" style="width:100%; height:400px;"/>
+				<img src="../../${contextPath}/resources/images/a.jpg" style="width:100%; height:400px;"/>
 			</div>
 			<div class="panel-body">
 				<ul class="nav nav-tabs">

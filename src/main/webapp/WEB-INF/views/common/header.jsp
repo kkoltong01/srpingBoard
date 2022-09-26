@@ -1,7 +1,27 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
+<c:set var="mvo" value="${SPRING_SECURITY_CONTEXT.authentication.principal}"/> 
+<c:set var="auth" value="${SPRING_SECURITY_CONTEXT.authentication.authorities}"/>
 <c:set var="contextPath" value="${pageContext.request.contextPath}"/>
+<script>
+	var csrfHeaderName= "${_csrf.headerName}";
+	var csrfTokenValue= "${_csrf.token}";
+	function logout() {
+		$.ajax({
+			url: "${contextPath}/logout",
+			type:"post",
+			beforeSend:function(xhr) {
+				xhr.setRequestHeader(csrfHeaderName,csrfTokenValue)
+			},
+			success : function() {
+				location.href="${contextPath}/"
+			},
+			error : function() { alert("error");}
+		});
+	}
+</script>
 
 <nav class="navbar navbar-inverse">
   <div class="container-fluid">
@@ -18,22 +38,20 @@
         <li class="active"><a href="${contextPath }/">Home</a></li>
         <li><a href="boardMain.do">게시판</a></li>
       </ul>
-      <c:if test="${empty mvo}">
+      <security:authorize access="isAnonymous()">
 	      <ul class="nav navbar-nav navbar-right">
 	            <li><a href="${contextPath}/memLoginForm.do"><span class="glyphicon glyphicon-log-in"></span> 로그인</a></li>
 	            <li><a href="${contextPath}/memJoin.do"><span class="glyphicon glyphicon-user"></span> 회원가입</a></li>
 	      </ul>
-      </c:if>
-      <c:if test="${!empty mvo }">
+      </security:authorize>
+      <security:authorize access="isAuthenticated()">
 	      <ul class="nav navbar-nav navbar-right">
-	      	<c:if test="${!empty mvo }">
-				<c:if test="${empty mvo.memProfile}">
-			  		<li style="color:white"><img class="img-circle" src="../${contextPath}/resources/images/person.jpg" style="width:50px; height:50px"/> ${mvo.memName}님</li>
+				<c:if test="${empty mvo.member.memProfile}">
+			  		<li style="color:white"><img class="img-circle" src="../${contextPath}/resources/images/person.jpg" style="width:50px; height:50px"/> ${mvo.member.memName}님
 			    </c:if>
-			    <c:if test="${!empty mvo.memProfile}">
-			  		<li style="color:white"><img class="img-circle" src="../${contextPath}/resources/images/${mvo.memProfile}" style="width:50px; height:50px"/> ${mvo.memName}님</li>
+			    <c:if test="${!empty mvo.member.memProfile}">
+			  		<li style="color:white"><img class="img-circle" src="../${contextPath}/resources/images/${mvo.member.memProfile}" style="width:50px; height:50px"/> ${mvo.member.memName}님
 			  	</c:if>
-			</c:if>
 	      <li class="dropdown">
 	         <a class="dropdown-toggle" data-toggle="dropdown" href="#">내정보<span class="caret"></span></a>
 	         <ul class="dropdown-menu">
@@ -41,9 +59,9 @@
 	           <li><a href="${contextPath }/memImageForm.do"><span class="glyphicon glyphicon-picture"></span> 프로필사진등록</a></li>
 	         </ul>
 	      </li>
-	       <li><a href="${contextPath }/memLogout.do">로그아웃</a></li>
+	       <li><a href="javascript:logout()">로그아웃</a></li>
 	      </ul>
-      </c:if>
+      </security:authorize>
     </div>
   </div>
 </nav>

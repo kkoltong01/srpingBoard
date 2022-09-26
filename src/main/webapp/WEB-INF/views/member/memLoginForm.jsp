@@ -11,6 +11,21 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <script>
+  $(document).ready(function(){
+		if(${param.error!=null}){
+			$("#messageType").attr("class", "modal-content panel-warning");
+	   		$(".modal-body").text("아이디와 비밀번호를 확인해주세요");
+	   		$(".modal-title").text("실패 메시지");
+	  		$("#myMessage").modal("show");
+		}
+		if(${!empty msgType}){
+	   		$("#messageType").attr("class", "modal-content panel-success");    
+	  		$("#myMessage").modal("show");
+	  	}
+	  });
+  </script>
+	
 </head>
 <body>
 <div class="container">
@@ -39,6 +54,24 @@
 		     <input type="hidden" name="${_csrf.parameterName }" value="${_csrf.token }"/>
     	</form>
     </div>
+    <!-- 실패 메세지를 출력(modal) -->
+	<div id="myMessage" class="modal fade" role="dialog" >
+	  <div class="modal-dialog">	
+	    <!-- Modal content-->
+	    <div id="messageType" class="modal-content panel-info">
+	      <div class="modal-header panel-heading">
+	        <button type="button" class="close" data-dismiss="modal">&times;</button>
+	        <h4 class="modal-title">${msgType}</h4>
+	      </div>
+	      <div class="modal-body">
+	        <p>${msg}</p>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+	      </div>
+	    </div>	
+	  </div>
+	</div>
     <div class="panel-footer">Spring_test</div>
   </div>
 </div>

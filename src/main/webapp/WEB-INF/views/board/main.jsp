@@ -2,6 +2,9 @@
     pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
+<c:set var="mvo" value="${SPRING_SECURITY_CONTEXT.authentication.principal}"/> 
+<c:set var="auth" value="${SPRING_SECURITY_CONTEXT.authentication.authorities}"/>
 <!DOCTYPE html>
 <html>
 <head>
@@ -50,7 +53,7 @@
 				listHtml+="<td>내용</td>";
 				listHtml+="<td colspan='4'>";
 				listHtml+="<textarea id='c"+obj.idx+"' rows='7' class='form-control' readonly></textarea>";
-				if("${mvo.memID}"==obj.memID) {
+				if("${mvo.member.memID}"==obj.memID) {
 					listHtml+="</br>";
 					listHtml+="<span id='ub"+obj.idx+"'><button class='btn btn-success btn-sm' onclick='goUpdateForm("+obj.idx+")'>수정화면</button></span>&nbsp";
 					listHtml+="<button class='btn btn-warning btn-sm' onclick='goDelete("+obj.idx+")'>삭제</button>";
@@ -58,7 +61,7 @@
 				listHtml+="</td>";
 				listHtml+="</tr>";
 			});
-			if(${!empty mvo}) {
+			if(${!empty mvo.member}) {
 				listHtml+="<tr>";
 				listHtml+="<td colspan='5'>";
 				listHtml+="<button class='btn btn-primary btn-sm' onclick='goForm()'>글쓰기</button>";
@@ -154,7 +157,6 @@
 			var newButton="<button class='btn btn-primary btn-sm' onclick='goUpdate("+idx+")'>수정</button>";
 			$("#ub"+idx).html(newButton);
 		}
-		
 		function goUpdate(idx) {
 			var title=$("#nt"+idx).val();
 			var content=$("#c"+idx).val();
@@ -181,7 +183,7 @@
 	    <div class="panel-body" id="view">Panel Content</div>
 	    <div class="panel-body" id="wForm" style="display :none">
 	    	<form id="frm">
-	    	<input type="hidden" id="memID" name="memID" value="${mvo.memID}"/>
+	    	<input type="hidden" id="memID" name="memID" value="${mvo.member.memID}"/>
 	    	<table style="width: 100%">
 		    	<tr>
 		    		<td>제목</td>
@@ -193,7 +195,7 @@
 		    	</tr>
 		    	<tr>
 		    		<td>작성자</td>
-		    		<td><input type="text" id="writer" name="writer" class="form-control" readonly value="${mvo.memName }"/></td>
+		    		<td><input type="text" id="writer" name="writer" class="form-control" readonly value="${mvo.member.memName }"/></td>
 		    	</tr>
 		    	<td colspan="2" align="center">
 		    		<button type="button" class="btn btn-success btn-sm" onclick="goInsert()">등록</button>

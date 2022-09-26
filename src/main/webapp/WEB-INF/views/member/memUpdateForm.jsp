@@ -1,7 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@taglib prefix="security" uri="http://www.springframework.org/security/tags" %>   
 <c:set var="contextPath" value="${pageContext.request.contextPath}"/>
+<c:set var="mvo" value="${SPRING_SECURITY_CONTEXT.authentication.principal}"/> 
+<c:set var="auth" value="${SPRING_SECURITY_CONTEXT.authentication.authorities}"/> 
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -47,12 +50,12 @@
     <div class="panel-heading">회원정보수정</div>
     <div class="panel-body">
     	<form name="frm" action="${contextPath}/memUpdate.do" method="post">
-    		<input type="hidden" id="memID" name="memID" value="${mvo.memID }"/>
+    		<input type="hidden" id="memID" name="memID" value="${mvo.member.memID }"/>
     		<input type="hidden" id="memPassword" name="memPassword" value=""/>
 		    <table class="table table-bordered" style="text-align: center; border :1px solid black;">
 		    	<tr>
 		    		<td style="width:15%; vertical-align:middle;">아이디</td>
-		    		<td>${mvo.memID }</td>
+		    		<td>${mvo.member.memID }</td>
 		    	</tr>
 		    	<tr>
 		    		<td style="width:15%; vertical-align:middle;">비밀번호</td>
@@ -64,24 +67,24 @@
 		    	</tr>
 		    	<tr>
 		    		<td style="width:15%; vertical-align:middle;">사용자이름</td>
-		    		<td colspan="2"><input type="text" id="memName" name="memName" class="form-control" placeholder="이름을 입력해주세요." maxlength="20" value="${mvo.memName }"/></td>
+		    		<td colspan="2"><input type="text" id="memName" name="memName" class="form-control" placeholder="이름을 입력해주세요." maxlength="20" value="${mvo.member.memName }"/></td>
 		    	</tr>
 		    	<tr>
 		    		<td style="width:15%; vertical-align:middle;">나이</td>
-		    		<td colspan="2"><input type="text" id="memAge" name="memAge" class="form-control" placeholder="나이를 입력해주세요." maxlength="20" value="0" value="${mvo.memAge }"/></td>
+		    		<td colspan="2"><input type="text" id="memAge" name="memAge" class="form-control" placeholder="나이를 입력해주세요." maxlength="20" value="0" value="${mvo.member.memAge }"/></td>
 		    	</tr>
 		    	<tr>
 		    		<td style="width:15%; vertical-align:middle;">성별</td>
 		    		 <td colspan="2">
 		                <div class="form-group" style="text-align: center; margin: 0 auto;">
 		                    <div class="btn-group" data-toggle="buttons">
-		                       <label class="btn btn-primary <c:if test="${mvo.memGender eq '남자'}"> active</c:if>">
+		                       <label class="btn btn-primary <c:if test="${mvo.member.memGender eq '남자'}"> active</c:if>">
 		                         <input type="radio"  name="memGender" autocomplete="off" value="남자" 
-		                           <c:if test="${mvo.memGender eq '남자'}"> checked</c:if> />남자
+		                           <c:if test="${mvo.member.memGender eq '남자'}"> checked</c:if> />남자
 		                       </label>
-		                        <label class="btn btn-primary <c:if test="${mvo.memGender eq '여자'}"> active</c:if>">
+		                        <label class="btn btn-primary <c:if test="${mvo.member.memGender eq '여자'}"> active</c:if>">
 		                         <input type="radio"  name="memGender" autocomplete="off" value="여자"
-		                           <c:if test="${mvo.memGender eq '여자'}"> checked</c:if> />여자
+		                           <c:if test="${mvo.member.memGender eq '여자'}"> checked</c:if> />여자
 		                       </label>
 		                    </div>
 		                </div>
@@ -89,34 +92,28 @@
 		    	</tr>
 		    	<tr>
 		    		<td style="width:15%; vertical-align:middle;">이메일</td>
-		    		<td colspan="2"><input type="text" id="memEmail" name="memEmail" class="form-control" placeholder="이메일을 입력해주세요." maxlength="20" value="${mvo.memEmail }"/></td>
+		    		<td colspan="2"><input type="text" id="memEmail" name="memEmail" class="form-control" placeholder="이메일을 입력해주세요." maxlength="20" value="${mvo.member.memEmail }"/></td>
 		    	</tr>
 		    	<tr>
 		    		<td style="width:15%; vertical-align:middle;">사용자 권한</td>
 		    		<td colspan="2">
-		    			<input type="checkbox" name="authList[0].auth" value="ROLE_USER"
-		    				<c:forEach var="authVO" items="${mvo.authList }">
-		    					<c:if test="${authVO.auth eq 'ROLE_USER'}">
-		    						checked
-		    					</c:if>
-		    				</c:forEach>
-		    			/>ROLE_USER
-		    				
-		    			<input type="checkbox" name="authList[1].auth" value="ROLE_MANAGER"
-		    				<c:forEach var="authVO" items="${mvo.authList }">
-		    					<c:if test="${authVO.auth eq 'ROLE_MANAGER'}">
-		    						checked
-		    					</c:if>
-		    				</c:forEach>
-		    			/>ROLE_MANAGER
-		    			
-		    			<input type="checkbox" name="authList[2].auth" value="ROLE_ADMIN"
-		    				<c:forEach var="authVO" items="${mvo.authList }">
-		    					<c:if test="${authVO.auth eq 'ROLE_ADMIN'}">
-		    						checked
-		    					</c:if>
-		    				</c:forEach>
-		    			/>ROLE_ADMIN
+		    			<input type="checkbox" name="authList[0].auth" value="ROLE_USER" 
+		                  <security:authorize access="hasRole('ROLE_USER')">
+		                    checked
+		                  </security:authorize>
+		                 /> ROLE_USER  
+                 
+		                 <input type="checkbox" name="authList[1].auth" value="ROLE_MANAGER"
+		                   <security:authorize access="hasRole('ROLE_MANAGER')">
+		                    checked
+		                  </security:authorize>
+		                  /> ROLE_MANAGER
+                
+		                 <input type="checkbox" name="authList[2].auth" value="ROLE_ADMIN"
+		                   <security:authorize access="hasRole('ROLE_ADMIN')">
+		                    checked
+		                  </security:authorize>
+		                  /> ROLE_ADMIN
 		    		</td>
 		    	</tr>
 		    	<tr>

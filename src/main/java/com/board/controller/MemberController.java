@@ -5,25 +5,30 @@ import java.io.IOException;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.SessionAttribute;
-
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import com.oreilly.servlet.MultipartRequest;
+import com.oreilly.servlet.multipart.DefaultFileRenamePolicy;
 
 import com.board.entity.AuthVO;
 import com.board.entity.Member;
+import com.board.entity.MemberUser;
 import com.board.mapper.MemberMapper;
-import com.oreilly.servlet.MultipartRequest;
-import com.oreilly.servlet.multipart.DefaultFileRenamePolicy;
+import com.board.security.MemberUserDetailsService;
 @Controller
 public class MemberController {
 	
@@ -32,6 +37,9 @@ public class MemberController {
 	
 	@Autowired
 	PasswordEncoder pWEncoder;
+	
+	@Autowired
+	MemberUserDetailsService memberUserDetailsService;
 	
 	@RequestMapping("/memJoin.do")
 	public String memJoin() {
@@ -87,11 +95,7 @@ public class MemberController {
 			attr.addFlashAttribute("msgType","성공 메세지");
 			attr.addFlashAttribute("msg","회원가입 성공");
 			// 회원가입이 성공하면 자동로그인되게 하기 - 세션 줘서
-			// getMember() -> 회원정보+권한정보가 있어야하기 떄문에 수정해줘야함
-			Member mvo=memberMapper.getMember(m.getMemID());
-			System.out.println(mvo);
-			session.setAttribute("mvo", mvo);
-			return "redirect:/";
+			return "redirect:/memLoginForm.do";
 		} else {
 			attr.addFlashAttribute("msgType","실패 메세지");
 			attr.addFlashAttribute("msg","회원가입 실패");
@@ -148,8 +152,10 @@ public class MemberController {
 			attr.addFlashAttribute("msgType","성공 메세지");
 			attr.addFlashAttribute("msg","회원수정 성공");
 			
-			Member mvo = memberMapper.getMember(m.getMemID());
-			session.setAttribute("mvo", mvo);
+			// 회원수정이 성공하면=>로그인처리하기
+			   Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+			   MemberUser userAccount = (MemberUser) authentication.getPrincipal();
+			   SecurityContextHolder.getContext().setAuthentication(createNewAuthentication(authentication,userAccount.getMember().getMemID()));
 			return "redirect:/";
 		} else {
 			attr.addFlashAttribute("msgType","실패 메세지");
@@ -211,13 +217,24 @@ public class MemberController {
 			mvo.setMemProfile(newProfile);
 			memberMapper.memProfileUpdate(mvo); // 이미지 업데이트 성공
 			
-			Member m= memberMapper.getMember(memID); //변경된 이미지파일을 가진 id
-			//세션을 새롭게 생성한다
-			session.setAttribute("mvo", m); //변경된 이미지파일을 가진 id 세션 set
+			// 스프링보안(새로운 인증 세션을 생성->객체바인딩)
+			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+			MemberUser userAccount = (MemberUser) authentication.getPrincipal();
+			SecurityContextHolder.getContext().setAuthentication(createNewAuthentication(authentication,userAccount.getMember().getMemID()));
+			
 			rttr.addFlashAttribute("msgType", "성공 메세지");
 			rttr.addFlashAttribute("msg", "이미지 변경 성공");			
 			return "redirect:/";
 		}
+		
+		// 스프링 보안(새로운 세션 생성 메서드)
+		 // UsernamePasswordAuthenticationToken -> 회원정보+권한정보
+		 protected Authentication createNewAuthentication(Authentication currentAuth, String username) {
+			    UserDetails newPrincipal = memberUserDetailsService.loadUserByUsername(username);
+			    UsernamePasswordAuthenticationToken newAuth = new UsernamePasswordAuthenticationToken(newPrincipal, currentAuth.getCredentials(), newPrincipal.getAuthorities());
+			    newAuth.setDetails(currentAuth.getDetails());	    
+			    return newAuth;
+		 }
 		
 		@GetMapping("/access-denied")
 		public String showAccessDenied() {
