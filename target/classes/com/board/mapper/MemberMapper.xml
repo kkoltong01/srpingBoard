@@ -55,10 +55,10 @@
 	</update>
 	
 	<insert id="authInsert" parameterType="com.board.entity.AuthVO">
-	<selectKey keyProperty="no" resultType="int" order="BEFORE">
-		    	SELECT auth_seq.nextval FROM DUAL
-	</selectKey>
-		insert into mem_auth(no,memID,auth) values(#{no},#{memID},#{auth})
+		<selectKey keyProperty="no" resultType="int" order="BEFORE">
+			    	SELECT auth_seq.nextval FROM DUAL
+		</selectKey>
+			insert into mem_auth(no,memID,auth) values(#{no},#{memID},#{auth})
 	</insert>
 	
 	<delete id="authDelete">
