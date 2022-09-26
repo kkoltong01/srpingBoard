@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -94,43 +95,13 @@ public class MemberController {
 		} else {
 			attr.addFlashAttribute("msgType","실패 메세지");
 			attr.addFlashAttribute("msg","회원가입 실패");
-			return "redirect:/memJoin.do";
-			
+			return "redirect:/memJoin.do";	
 		}
 	}
-	
-	//로그아웃
-	@RequestMapping("/memLogout.do")
-	public String memLogout(HttpSession session) {
-		session.invalidate();
-		return "redirect:/";
-	}
-	
 	//로그인화면이동
 	@RequestMapping("/memLoginForm.do")
 	public String memLoginForm() {
 		return "member/memLoginForm";
-	}
-	//로그인
-	@RequestMapping("/memLogin.do")
-	public String memLogin(Member m,  RedirectAttributes attr, HttpSession session) {
-		if(m.getMemID()==null || m.getMemID().equals("") ||
-				m.getMemPassword()==null || m.getMemPassword().equals("")) {
-			attr.addAttribute("msgType", "실패 메세지");
-			attr.addAttribute("msg", "아이디와 비밀번호를 입력하세요.");
-			return "redirect:/memLoginForm.do";
-		}
-		Member mvo=memberMapper.memLogin(m);
-		if(mvo!=null) {
-			attr.addAttribute("msgType", "성공 메세지");
-			attr.addAttribute("msg", "로그인 성공");
-			session.setAttribute("mvo", mvo);
-			return "redirect:/";
-		} else {
-			attr.addAttribute("msgType", "실패 메세지");
-			attr.addAttribute("msg", "로그인 실패");
-			return "redirect:/memLoginForm.do";
-		}
 	}
 	// 회원정보수정화면
 	@RequestMapping("/memUpdateForm.do")
@@ -157,8 +128,23 @@ public class MemberController {
 			return "redirect:/memUpdateForm.do";
 		}
 		//회원을 수정하기
+		String encyptPw=pWEncoder.encode(m.getMemPassword());
+		m.setMemPassword(encyptPw);
 		int result=memberMapper.memUpdate(m);
 		if(result==1) {
+			//기존 권한을 삭제하고
+			memberMapper.authDelete(m.getMemID());
+			
+			// 새로운 권한을 추가하기	
+			List<AuthVO> list=m.getAuthList();			
+			for(AuthVO authVO : list) { 
+				if(authVO.getAuth()!=null) {
+					AuthVO saveVO=new AuthVO();
+					saveVO.setMemID(m.getMemID()); 
+					saveVO.setAuth(authVO.getAuth());
+					memberMapper.authInsert(saveVO); 
+				} 
+	        }
 			attr.addFlashAttribute("msgType","성공 메세지");
 			attr.addFlashAttribute("msg","회원수정 성공");
 			
@@ -231,5 +217,10 @@ public class MemberController {
 			rttr.addFlashAttribute("msgType", "성공 메세지");
 			rttr.addFlashAttribute("msg", "이미지 변경 성공");			
 			return "redirect:/";
+		}
+		
+		@GetMapping("/access-denied")
+		public String showAccessDenied() {
+			return "access-denied";
 		}
 }

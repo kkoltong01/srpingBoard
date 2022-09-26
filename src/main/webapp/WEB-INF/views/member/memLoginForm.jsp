@@ -23,11 +23,11 @@
 		    <table class="table table-bordered" style="text-align: center; border :1px solid black;">
 		    	<tr>
 		    		<td style="width:15%; vertical-align:middle;">아이디</td>
-		    		<td><input type="text" id="memID" name="memID" class="form-control" placeholder="아이디를 입력해주세요." maxlength="20"/></td>
+		    		<td><input type="text" id="memID" name="username" class="form-control" placeholder="아이디를 입력해주세요." maxlength="20"/></td>
 		    	</tr>
 		    	<tr>
 		    		<td style="width:15%; vertical-align:middle;">비밀번호</td>
-		    		<td colspan="2"><input type="password" id="memPassword" name="memPassword" class="form-control" placeholder="비밀번호를 입력해주세요." maxlength="20"/></td>
+		    		<td colspan="2"><input type="password" id="memPassword" name="password" class="form-control" placeholder="비밀번호를 입력해주세요." maxlength="20"/></td>
 		    	</tr>
 		    	<tr>
 		    		<td colspan="3" style="text-align: left;">

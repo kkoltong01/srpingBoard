@@ -33,12 +33,13 @@
 		values(#{idx},#{memID},#{memPassword},#{memName},#{memAge},#{memGender},#{memEmail},#{memProfile})
 	</insert>
 	
-	<select id="memLogin" resultType="com.board.entity.Member" parameterType="com.board.entity.Member">
-		select * from mem_tbl where memID=#{memID} and memPassword=#{memPassword}
+	<select id="memLogin" resultMap="memberMap" parameterType="com.board.entity.Member">
+		select * from mem_stbl mem LEFT OUTER JOIN mem_auth auth on
+		mem.memID=auth.memID where mem.memID=#{username}
 	</select>
 	
 	<update id="memUpdate" parameterType="com.board.entity.Member">
-		update mem_tbl set memPassword=#{memPassword},memName=#{memName},
+		update mem_stbl set memPassword=#{memPassword},memName=#{memName},
 							memAge=#{memAge},memGender=#{memGender},memEmail=#{memEmail}
 							where memID=#{memID}
 	</update>
@@ -50,7 +51,7 @@
 	</select>
 	
 	<update id="memProfileUpdate" parameterType="com.board.entity.Member">
-		update mem_tbl set memProfile=#{memProfile} where memID=#{memID}
+		update mem_stbl set memProfile=#{memProfile} where memID=#{memID}
 	</update>
 	
 	<insert id="authInsert" parameterType="com.board.entity.AuthVO">
@@ -59,4 +60,8 @@
 	</selectKey>
 		insert into mem_auth(no,memID,auth) values(#{no},#{memID},#{auth})
 	</insert>
+	
+	<delete id="authDelete">
+		delete from mem_auth where memID=#{memID}
+	</delete>
 </mapper>
